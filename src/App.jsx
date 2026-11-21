@@ -4,6 +4,7 @@ import { SEED_TECHNICIANS } from './data/technicians.js';
 import { SEED_BOOKINGS, isActiveBooking } from './data/bookings.js';
 import { TRANSLATIONS } from './data/translations.js';
 import { usePersistentState } from './hooks/usePersistentState.js';
+import { useInstallPrompt } from './hooks/useInstallPrompt.js';
 
 import TopBar from './components/TopBar.jsx';
 import RoleStrip from './components/RoleStrip.jsx';
@@ -63,6 +64,8 @@ export default function App() {
   const [statusFilter, setStatusFilter] = useState('All');
   const [largeText, setLargeText] = useState(false);
   const [toast, setToast] = useState('');
+
+  const { canPrompt, showIOSInstructions, promptInstall } = useInstallPrompt();
 
   const t = TRANSLATIONS[lang];
 
@@ -157,6 +160,14 @@ export default function App() {
 
   const toggleVerified = (id) =>
     setTechnicians((prev) => prev.map((tech) => (tech.id === id ? { ...tech, verified: !tech.verified } : tech)));
+
+  const installApp = canPrompt
+    ? async () => {
+        if ((await promptInstall()) === 'accepted') setToast('FIXORA is being added to your device.');
+      }
+    : showIOSInstructions
+      ? () => setToast('To install on iPhone: tap the Share button, then “Add to Home Screen”.')
+      : undefined;
 
   const detailBooking = selectedBooking || bookings[0];
 
@@ -311,6 +322,7 @@ export default function App() {
             onToast={setToast}
             onResetDemo={resetDemo}
             onOpenAbout={() => setPage('About')}
+            onInstall={installApp}
           />
         )}
 

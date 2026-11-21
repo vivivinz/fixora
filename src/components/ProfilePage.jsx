@@ -1,4 +1,13 @@
-import { Activity, ChevronRight, FileText, Languages, Settings, ShieldCheck, Smartphone } from 'lucide-react';
+import {
+  Activity,
+  ChevronRight,
+  Download,
+  FileText,
+  Languages,
+  Settings,
+  ShieldCheck,
+  Smartphone,
+} from 'lucide-react';
 import PageTitle from './PageTitle.jsx';
 
 // Used for both the "Profile" (Customer, Technician) and "Settings" (Admin) tabs.
@@ -12,6 +21,7 @@ export default function ProfilePage({
   onToast,
   onResetDemo,
   onOpenAbout,
+  onInstall,
 }) {
   return (
     <section>
@@ -29,6 +39,12 @@ export default function ProfilePage({
       </div>
 
       <div className="settings-list">
+        {/* Only rendered when the app can be installed (hidden once installed). */}
+        {onInstall && (
+          <button onClick={onInstall}>
+            <Download />Install FIXORA app <ChevronRight />
+          </button>
+        )}
         <button onClick={onToggleLang}>
           <Languages />Language <span>{lang === 'en' ? 'English' : 'Filipino'}</span>
         </button>

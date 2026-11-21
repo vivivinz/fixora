@@ -9,9 +9,5 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 );
 
-// The live site registers the service worker from index.html. It caches every
-// GET request cache-first, which would serve stale modules during `vite dev`,
-// so it is only registered in production builds here.
-if (import.meta.env.PROD && 'serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
-}
+// The service worker is generated and registered by vite-plugin-pwa (see vite.config.js).
+// It is only active in production builds, so `npm run dev` always serves fresh code.
